@@ -9,12 +9,13 @@
         @media print {
             .no-print, #exchangeModal { display: none !important; }
             .print-only { display: block !important; }
-            body { font-family: "Times New Roman", Times, serif; }
-            .kip-tag { display: none !important; } /* Ẩn Kíp A,B,C,D khi xuất file */
+            body { font-family: "Times New Roman", Times, serif; background: white; }
+            .kip-tag { display: none !important; } 
         }
         .print-only { display: none; }
         td { white-space: pre-line; vertical-align: top; }
-        .editable-cell { min-height: 45px; cursor: edit; }
+        .editable-cell { min-height: 45px; cursor: text; padding: 4px; }
+        .editable-cell:focus { background-color: #f9fafb; outline: 2px solid #3b82f6; border-radius: 2px; }
         .kip-tag { font-size: 10px; font-weight: bold; color: #3b82f6; text-transform: uppercase; margin-bottom: 2px; border-bottom: 1px dashed #d1d5db; display: inline-block; }
         #exchangeModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
     </style>
@@ -49,28 +50,27 @@
                 <label class="block font-semibold text-sm">Vị trí làm việc:</label>
                 <input type="text" id="workLocation" value="Phòng thiết bị trung tâm AACC/HCM" class="w-full border p-2 rounded text-sm">
             </div>
-            <button onclick="generateSchedule()" class="bg-blue-600 text-white px-5 py-2 rounded font-bold shadow hover:bg-blue-700">Cập nhật lịch</button>
-            <!-- NÚT MỚI THEO YÊU CẦU -->
+            <button onclick="generateSchedule()" class="bg-blue-600 text-white px-5 py-2 rounded font-bold shadow hover:bg-blue-700">Tạo lịch tháng 05/2026</button>
             <button onclick="openExchangeModal()" class="bg-orange-500 text-white px-5 py-2 rounded font-bold shadow hover:bg-orange-600">Phiếu đổi ca</button>
             <button onclick="window.print()" class="bg-green-600 text-white px-5 py-2 rounded font-bold shadow hover:bg-green-700">Xuất Báo cáo</button>
         </div>
     </div>
 
     <!-- BÁO CÁO LỊCH TRỰC CHÍNH -->
-    <div id="mainReport" class="max-w-4xl mx-auto bg-white p-10 shadow-lg">
+    <div id="mainReport" class="max-w-4xl mx-auto bg-white p-10 shadow-lg mb-10">
         <div class="text-center mb-6">
-            <h3 class="font-bold uppercase">Công ty Quản lý Bay Miền Nam</h3>
-            <h3 class="font-bold uppercase underline">Đội Thông Tin - TT BĐKT</h3>
+            <h3 class="font-bold uppercase text-sm">Công ty Quản lý Bay Miền Nam</h3>
+            <h3 class="font-bold uppercase underline text-sm">Đội Thông Tin - TT BĐKT</h3>
             <h2 class="text-xl font-bold uppercase mt-5">Báo cáo danh sách ca trực</h2>
             <p class="italic">Tháng 05 năm 2026</p>
         </div>
         <table class="w-full border-collapse border border-black text-sm">
             <thead>
                 <tr class="bg-gray-100">
-                    <th class="border border-black p-2 w-12">Ngày</th>
-                    <th class="border border-black p-2 w-[40%]">Ca 1 (07H-19H)</th>
-                    <th class="border border-black p-2 w-[40%]">Ca 2 (19H-07H)</th>
-                    <th class="border border-black p-2">Ghi chú</th>
+                    <th class="border border-black p-2 w-12 text-center">Ngày</th>
+                    <th class="border border-black p-2 w-[40%] font-bold text-center">Ca 1 (07H-19H)</th>
+                    <th class="border border-black p-2 w-[40%] font-bold text-center">Ca 2 (19H-07H)</th>
+                    <th class="border border-black p-2 text-center">Ghi chú</th>
                 </tr>
             </thead>
             <tbody id="scheduleBody"></tbody>
@@ -87,28 +87,19 @@
     <!-- POPUP FORM NHẬP PHIẾU ĐỔI CA -->
     <div id="exchangeModal" class="no-print">
         <div class="bg-white p-6 rounded-lg shadow-2xl w-full max-w-md">
-            <h3 class="text-lg font-bold border-b pb-2 mb-4 text-orange-600 uppercase">Tạo Phiếu Đổi Ca</h3>
+            <h3 class="text-lg font-bold border-b pb-2 mb-4 text-orange-600 uppercase text-center">Thông tin Phiếu Đổi Ca</h3>
             <div class="space-y-3 text-sm">
-                <div>
-                    <label class="font-bold">Ngày trực đổi:</label>
-                    <input type="text" id="fDate" class="w-full border p-2 rounded" placeholder="Ví dụ: 15/05/2026">
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="font-bold">Ngày xin đổi:</label><input type="text" id="fDate" class="w-full border p-2 rounded" placeholder="15/05/2026"></div>
+                    <div><label class="font-bold text-blue-600">Ngày trả ca:</label><input type="text" id="fReturnDate" class="w-full border border-blue-300 p-2 rounded" placeholder="17/05/2026"></div>
                 </div>
-                <div>
-                    <label class="font-bold">Người xin đổi (Ca cũ):</label>
-                    <input type="text" id="fStaffOld" class="w-full border p-2 rounded" placeholder="Họ và tên">
-                </div>
-                <div>
-                    <label class="font-bold">Người nhận đổi (Ca mới):</label>
-                    <input type="text" id="fStaffNew" class="w-full border p-2 rounded" placeholder="Họ và tên">
-                </div>
-                <div>
-                    <label class="font-bold">Lý do:</label>
-                    <textarea id="fReason" class="w-full border p-2 rounded h-20">Giải quyết việc gia đình</textarea>
-                </div>
+                <div><label class="font-bold">Người xin đổi (Ca cũ):</label><input type="text" id="fStaffOld" class="w-full border p-2 rounded"></div>
+                <div><label class="font-bold">Người nhận đổi (Ca mới):</label><input type="text" id="fStaffNew" class="w-full border p-2 rounded"></div>
+                <div><label class="font-bold">Lý do:</label><textarea id="fReason" class="w-full border p-2 rounded h-16">Giải quyết việc gia đình</textarea></div>
             </div>
             <div class="flex justify-end gap-2 mt-6">
                 <button onclick="closeModal()" class="px-4 py-2 border rounded shadow">Đóng</button>
-                <button onclick="printExchangeFile()" class="px-4 py-2 bg-orange-500 text-white rounded font-bold shadow">Xuất Phiếu PDF</button>
+                <button onclick="printExchangeFile()" class="px-4 py-2 bg-orange-500 text-white rounded font-bold shadow">In Phiếu</button>
             </div>
         </div>
     </div>
@@ -121,19 +112,33 @@
         </div>
         <div class="text-center my-10">
             <h1 class="text-2xl font-bold uppercase underline">PHIẾU XIN ĐỔI CA TRỰC</h1>
-            <p class="italic mt-2">Ngày .... tháng .... năm 2026</p>
+            <p class="italic mt-2 text-lg">Ngày <span id="pNowDay">...</span> tháng <span id="pNowMonth">...</span> năm 2026</p>
         </div>
-        <div class="space-y-6 text-lg leading-relaxed">
+        <div class="space-y-6 text-xl leading-relaxed">
             <p><strong>Kính gửi:</strong> Lãnh đạo Đội Thông Tin - TT BĐKT.</p>
             <p>Tôi tên là: <span id="outOld" class="font-bold italic border-b border-black px-2">...</span></p>
-            <p>Đề nghị xin đổi ca trực ngày <span id="outDate" class="font-bold border-b border-black px-2">...</span> cho đồng chí: <span id="outNew" class="font-bold italic border-b border-black px-2">...</span></p>
+            <p>Đang thực hiện nhiệm vụ tại ca trực ngày <span id="outDate" class="font-bold border-b border-black px-2">...</span></p>
+            <p>Nay tôi làm đơn này đề nghị được đổi ca trực cho đồng chí: <span id="outNew" class="font-bold italic border-b border-black px-2">...</span></p>
+            <p>Thời gian trả ca dự kiến vào ngày: <span id="outReturnDate" class="font-bold border-b border-black px-2 italic">...</span></p>
             <p><strong>Lý do:</strong> <span id="outReason" class="italic">...</span></p>
-            <p>Chúng tôi cam kết đảm bảo an toàn khai thác và bàn giao đầy đủ nội dung công việc trong ca trực.</p>
+            <p>Chúng tôi cam kết đảm bảo an toàn khai thác và bàn giao đầy đủ nội dung công việc.</p>
         </div>
-        <div class="grid grid-cols-3 text-center mt-24">
-            <div><p class="font-bold">Người đề nghị</p></div>
-            <div><p class="font-bold">Người nhận đổi</p></div>
-            <div><p class="font-bold">Lãnh đạo Đội duyệt</p></div>
+        <div class="grid grid-cols-3 text-center mt-24 gap-4">
+            <div>
+                <p class="font-bold underline">Người đề nghị</p>
+                <br><br><br><br>
+                <p class="text-sm">(Ký, ghi rõ họ tên)</p>
+            </div>
+            <div>
+                <p class="font-bold underline">Người nhận đổi</p>
+                <br><br><br><br>
+                <p class="text-sm">(Ký, ghi rõ họ tên)</p>
+            </div>
+            <div>
+                <p class="font-bold underline">Lãnh đạo Đội duyệt</p>
+                <br><br><br><br>
+                <p class="text-sm">(Ký, ghi rõ họ tên)</p>
+            </div>
         </div>
     </div>
 
@@ -142,11 +147,18 @@
         function closeModal() { document.getElementById('exchangeModal').style.display = 'none'; }
 
         function printExchangeFile() {
+            // Cập nhật ngày lập phiếu hiện tại
+            const now = new Date();
+            document.getElementById('pNowDay').innerText = now.getDate();
+            document.getElementById('pNowMonth').innerText = now.getMonth() + 1;
+
+            // Cập nhật thông tin từ Form
             document.getElementById('outDate').innerText = document.getElementById('fDate').value;
+            document.getElementById('outReturnDate').innerText = document.getElementById('fReturnDate').value;
             document.getElementById('outOld').innerText = document.getElementById('fStaffOld').value;
             document.getElementById('outNew').innerText = document.getElementById('fStaffNew').value;
             document.getElementById('outReason').innerText = document.getElementById('fReason').value;
-
+            
             document.getElementById('mainReport').classList.add('no-print');
             window.print();
             setTimeout(() => {
@@ -186,7 +198,7 @@
                             <div class="kip-tag">${k2.name}</div>
                             <div contenteditable="true" class="editable-cell outline-none">${k2.staff}</div>
                         </td>
-                        <td contenteditable="true" class="border border-black p-1 outline-none text-sm"></td>
+                        <td contenteditable="true" class="border border-black p-1 outline-none text-xs"></td>
                     </tr>`;
             }
         }
